@@ -7,16 +7,19 @@ using Notes.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Добавляем AutoMapper.
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
     config.AddProfile(new AssemblyMappingProfile(typeof(INotesDbContext).Assembly));
 });
 
+// Инжектим наши зависимости.
 builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddControllers();
 
+// Добавляем CORS и контроллеры.
+builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -29,18 +32,17 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Настраиваем контекст БД.
 using (var scope = app.Services.CreateScope())
 {
     var serviceProvider = scope.ServiceProvider;
-    
     try
     {
         var context = serviceProvider.GetRequiredService<NotesDbContext>();
         DbInitializer.Initialize(context);
     }
-    catch (Exception e)
+    catch
     {
-
     }
 }
 
@@ -49,14 +51,12 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+// Настройка роутов, обработка ошибок и редиректы.
 app.UseCustomExceptionHandlerMiddleware();
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 app.Run();

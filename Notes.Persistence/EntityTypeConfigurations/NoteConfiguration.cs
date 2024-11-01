@@ -6,6 +6,10 @@ namespace Notes.Persistence.EntityTypeConfigurations
 {
     public class NoteConfiguration : IEntityTypeConfiguration<Note>
     {
+        /// <summary>
+        /// Конфигурация БД.
+        /// </summary>
+        /// <param name="builder"></param>
         public void Configure(EntityTypeBuilder<Note> builder)
         {
             builder.HasKey(note => note.Id);

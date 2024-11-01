@@ -1,20 +1,19 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using System.Net;
+using FluentValidation;
 using Notes.Application.Common.Exceptions;
-using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Notes.WebApi.Middleware
 {
-    // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
     public class CustomExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
 
         public CustomExceptionHandlerMiddleware(RequestDelegate next) => _next = next;
 
+        /// <summary>
+        /// Выполение обработчика middleware.
+        /// </summary>
+        /// <param name="httpContext"></param>
         public async Task Invoke(HttpContext httpContext)
         {
             try
@@ -27,6 +26,11 @@ namespace Notes.WebApi.Middleware
             }
         }
 
+        /// <summary>
+        /// Выполнение асинхронного обработчика в случае ошибок.
+        /// </summary>
+        /// <param name="httpContext">контекст</param>
+        /// <param name="ex">exception</param>
         private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
         {
             var code = HttpStatusCode.InternalServerError;
@@ -47,16 +51,16 @@ namespace Notes.WebApi.Middleware
 
             httpContext.Response.StatusCode = (int)code;
 
-            await httpContext.Response.WriteAsJsonAsync(result); 
+            await httpContext.Response.WriteAsJsonAsync(result);
         }
     }
 
-    // Extension method used to add the middleware to the HTTP request pipeline.
     public static class CustomExceptionHandlerMiddlewareExtensions
     {
-        public static IApplicationBuilder UseCustomExceptionHandlerMiddleware(this IApplicationBuilder builder)
+        // Метод расширения для встаивания middleware в HTTP pipeline.
+        public static void UseCustomExceptionHandlerMiddleware(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<CustomExceptionHandlerMiddleware>();
+            builder.UseMiddleware<CustomExceptionHandlerMiddleware>();
         }
     }
 }

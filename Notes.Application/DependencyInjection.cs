@@ -8,12 +8,15 @@ namespace Notes.Application
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services)
+        /// <summary>
+        /// Инжектирование зависимостей на уровне приложения.
+        /// </summary>
+        /// <param name="services">сервисы</param>
+        public static void AddApplication(this IServiceCollection services)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             services.AddValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() });
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            return services;
         }
     }
 }

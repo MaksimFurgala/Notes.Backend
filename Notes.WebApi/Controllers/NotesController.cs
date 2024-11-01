@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Notes.Application.Notes.Commands.CreateNote;
 using Notes.Application.Notes.Commands.DeleteNote;
@@ -10,6 +9,9 @@ using Notes.WebApi.Models;
 
 namespace Notes.WebApi.Controllers
 {
+    /// <summary>
+    /// Контроллер для управления сущностью "Заметка".
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class NotesController : BaseController
@@ -18,6 +20,10 @@ namespace Notes.WebApi.Controllers
 
         public NotesController(IMapper mapper) => _mapper = mapper;
 
+        /// <summary>
+        /// Получить список всех заметок.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<NoteListVm>> GetAll()
         {
@@ -29,6 +35,11 @@ namespace Notes.WebApi.Controllers
             return Ok(viewModel);
         }
 
+        /// <summary>
+        /// Получить заметку
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>доп. информация</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<NoteDetailsVm>> Get([FromQuery] Guid id)
         {
@@ -41,6 +52,11 @@ namespace Notes.WebApi.Controllers
             return Ok(viewModel);
         }
 
+        /// <summary>
+        /// Создание заметки.
+        /// </summary>
+        /// <param name="createNoteDto">модель создания заметки</param>
+        /// <returns>guid</returns>
         [HttpPost]
         public async Task<ActionResult<Guid>> Create([FromBody] CreateNoteDto createNoteDto)
         {
@@ -50,6 +66,11 @@ namespace Notes.WebApi.Controllers
             return Ok(noteId);
         }
 
+        /// <summary>
+        /// Обновление заметки.
+        /// </summary>
+        /// <param name="updateNoteDto"></param>
+        /// <returns>response</returns>
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateNoteDto updateNoteDto)
         {
@@ -59,6 +80,11 @@ namespace Notes.WebApi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Удаление заметки.
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns>response</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromQuery] Guid id)
         {

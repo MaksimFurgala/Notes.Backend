@@ -6,12 +6,22 @@ using Notes.Domain;
 
 namespace Notes.Application.Notes.Commands.UpdateNote;
 
+/// <summary>
+/// Обработчик команды для обновления заметки.
+/// </summary>
 public class UpdateNoteCommandHandler : IRequestHandler<UpdateNoteCommand, Unit>
 {
     private readonly INotesDbContext _context;
 
     public UpdateNoteCommandHandler(INotesDbContext context) => _context = context;
 
+    /// <summary>
+    /// Выполнение обработчика команды для обновления заметки.
+    /// </summary>
+    /// <param name="request">команда</param>
+    /// <param name="cancellationToken">токен отмены</param>
+    /// <returns></returns>
+    /// <exception cref="NotFoundException"></exception>
     public async Task<Unit> Handle(UpdateNoteCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Notes.FirstOrDefaultAsync(note => note.Id == request.Id, cancellationToken);

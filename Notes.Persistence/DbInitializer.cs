@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Notes.Persistence
+﻿namespace Notes.Persistence
 {
-    public class DbInitializer
+    public abstract class DbInitializer
     {
+        /// <summary>
+        /// Инициализация контекста БД.
+        /// </summary>
+        /// <param name="context">контекст</param>
         public static void Initialize(NotesDbContext context)
         {
             context.Database.EnsureCreated();
